@@ -1,4 +1,7 @@
-FROM aoc2023
+FROM rust:latest
+
+WORKDIR "/opt/aoc"
+COPY . .
 
 RUN rustup component add llvm-tools-preview
 RUN cargo install grcov
