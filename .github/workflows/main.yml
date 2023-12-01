@@ -7,7 +7,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Build Docker image
-        run: docker build -t aoc2023-test .
+        run: docker build -t aoc2023-test -f Dockerfile.test .
       - name: Run tests in Docker
         run: docker run --name aoc2023-test-run aoc2023-test
       - name: Copy test results
@@ -17,3 +17,4 @@ jobs:
         with:
           files: ./lcov.info
           fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
