@@ -1,0 +1,17 @@
+# JetBrains
+.idea
+*.iml
+*.ipr
+*.iws
+out/
+build/
+
+# Cargo
+debug/
+target/
+Cargo.lock
+**/*.rs.bk
+
+# Project specific
+cookie.txt
+/puzzle/
