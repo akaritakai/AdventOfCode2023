@@ -6,13 +6,15 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Build Docker image
-        run: docker build -t aoc2023-test -f Dockerfile.test .
-      - name: Run tests in Docker
+      - name: Build main Docker image
+        run: docker build -t aoc .
+      - name: Build test Docker image
+        run: docker build -t aoc-test -f Dockerfile.test .
+      - name: Run tests in Docker container
         run: docker run --name aoc2023-test-run aoc2023-test
-      - name: Copy test results
+      - name: Copy test results from Docker container
         run: docker cp aoc2023-test-run:/opt/aoc/lcov.info .
-      - name: Upload to Codecov
+      - name: Upload test results to Codecov
         uses: codecov/codecov-action@v3
         with:
           files: ./lcov.info
