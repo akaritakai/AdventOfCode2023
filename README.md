@@ -47,12 +47,12 @@ for that puzzle's input.
 
 The URL for your puzzle input will be at:
 ```
-https://adventofcode.com/2022/day/${DAY}/input
+https://adventofcode.com/2023/day/${DAY}/input
 ```
 where `${DAY}` is the day number of the puzzle.
 
-As an example, Day 1's input is at https://adventofcode.com/2022/day/1/input,
-Day 2's input is at https://adventofcode.com/2022/day/2/input, etc.
+As an example, Day 1's input is at https://adventofcode.com/2023/day/1/input,
+Day 2's input is at https://adventofcode.com/2023/day/2/input, etc.
 
 ## Docker Instructions
 
