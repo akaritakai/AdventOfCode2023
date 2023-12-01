@@ -7,9 +7,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Build main Docker image
-        run: docker build -t aoc .
+        run: docker build -t aoc2023 .
       - name: Build test Docker image
-        run: docker build -t aoc-test -f Dockerfile.test .
+        run: docker build -t aoc2023-test -f Dockerfile.test .
       - name: Run tests in Docker container
         run: docker run --name aoc2023-test-run aoc2023-test
       - name: Copy test results from Docker container

@@ -1,4 +1,4 @@
-FROM aoc
+FROM aoc2023
 
 RUN rustup component add llvm-tools-preview
 RUN cargo install grcov
