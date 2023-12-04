@@ -11,19 +11,11 @@ impl Puzzle for Day {
     }
 
     fn solve_part_1(&self) -> String {
-        self.input
-            .lines()
-            .map(|line| extract_calibration_value(extract_digits(line, false)))
-            .sum::<i32>()
-            .to_string()
+        self.solve_internal(false).to_string()
     }
 
     fn solve_part_2(&self) -> String {
-        self.input
-            .lines()
-            .map(|line| extract_calibration_value(extract_digits(line, true)))
-            .sum::<i32>()
-            .to_string()
+        self.solve_internal(true).to_string()
     }
 }
 
@@ -32,6 +24,13 @@ impl Day {
         Box::new(Day {
             input: input.to_string(),
         })
+    }
+
+    fn solve_internal(&self, allow_spelled_out: bool) -> i32 {
+        self.input
+            .lines()
+            .map(|line| extract_calibration_value(extract_digits(line, allow_spelled_out)))
+            .sum()
     }
 }
 
