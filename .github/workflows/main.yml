@@ -6,6 +6,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          token: ${{ secrets.REPO_TOKEN }}
       - name: Build main Docker image
         run: docker build -t aoc2023 .
       - name: Build test Docker image
