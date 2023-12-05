@@ -1,0 +1,3 @@
+[submodule "resources/tests"]
+	path = resources/tests
+	url = git@github.com:akaritakai/aoc2023-inputs.git
