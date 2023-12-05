@@ -99,14 +99,8 @@ struct Symbol {
 }
 
 fn is_adjacent(symbol: &Symbol, number: &PartNumber) -> bool {
-    for i in number.start_col..number.end_col {
-        if (symbol.row as i32 - number.row as i32).abs() <= 1
-            && (symbol.col as i32 - i as i32).abs() <= 1
-        {
-            return true;
-        }
-    }
-    false
+    (symbol.row as i32 - number.row as i32).abs() <= 1
+        && (number.start_col.saturating_sub(1)..number.end_col + 1).contains(&symbol.col)
 }
 
 #[cfg(test)]
