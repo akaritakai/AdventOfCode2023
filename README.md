@@ -2,8 +2,8 @@
 
 [![Build Status](https://github.com/akaritakai/AdventOfCode2023/actions/workflows/main.yml/badge.svg)](https://github.com/akaritakai/AdventOfCode2023/actions)
 [![Code Coverage](https://img.shields.io/codecov/c/github/akaritakai/AdventOfCode2023.svg)](https://codecov.io/gh/akaritakai/AdventOfCode2023)
-![Stars](https://img.shields.io/badge/stars%20⭐-8-yellow)
-![Days Completed](https://img.shields.io/badge/days%20completed-4-green)
+![Stars](https://img.shields.io/badge/stars%20⭐-10-yellow)
+![Days Completed](https://img.shields.io/badge/days%20completed-5-green)
 
 This repo contains my Advent of Code 2023 solutions in Rust. After providing it with your puzzle inputs (or your
 session token), running the program will print out the answers to all days of the puzzle. A Docker image is provided to
@@ -24,7 +24,15 @@ Day 03 Part 1: 556367
 Day 03 Part 2: 89471771
 Day 04 Part 1: 33950
 Day 04 Part 2: 14814534
+Day 05 Part 1: 1181555926
+Day 05 Part 2: 37806486
 ```
+
+## Docker Instructions
+
+1. Follow the instructions below for providing your puzzle input.
+2. Run `docker build -t aoc2023 .`
+3. Run `docker run --rm --name aoc2023-run aoc2023`
 
 ## Providing Your Puzzle Input
 
@@ -61,9 +69,3 @@ where `${DAY}` is the day number of the puzzle.
 
 As an example, Day 1's input is at https://adventofcode.com/2023/day/1/input,
 Day 2's input is at https://adventofcode.com/2023/day/2/input, etc.
-
-## Docker Instructions
-
-1. Follow the instructions above for providing your puzzle input.
-2. Run `docker build -t aoc2023 .`
-3. Run `docker run --rm --name aoc2023-run aoc2023`

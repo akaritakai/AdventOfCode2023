@@ -1,6 +1,6 @@
 use crate::puzzle::Puzzle;
 use lazy_regex::regex;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 pub struct Day {
     input: String,
@@ -12,9 +12,9 @@ impl Puzzle for Day {
     }
 
     fn solve_part_1(&self) -> String {
-        self.get_edges()
-            .values()
-            .flatten()
+        let numbers: HashSet<PartNumber> = self.get_edges().values().flatten().cloned().collect();
+        numbers
+            .iter()
             .map(|number| number.num)
             .sum::<usize>()
             .to_string()
