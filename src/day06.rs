@@ -31,8 +31,12 @@ impl Puzzle for Day {
 fn calculate_ways_to_win(time: u64, distance: u64) -> u64 {
     let discriminant = (time * time - 4 * distance) as f64;
     let sqrt_discriminant = discriminant.sqrt();
-    let min_hold_time = (((time as f64) - sqrt_discriminant) / 2.0).ceil() as u64;
-    let max_hold_time = (((time as f64) + sqrt_discriminant) / 2.0).floor() as u64;
+    let mut min_hold_time = (((time as f64) - sqrt_discriminant) / 2.0).ceil() as u64;
+    let mut max_hold_time = (((time as f64) + sqrt_discriminant) / 2.0).floor() as u64;
+    if sqrt_discriminant.fract() == 0.0 {
+        min_hold_time += 1;
+        max_hold_time -= 1;
+    }
     max_hold_time - min_hold_time + 1
 }
 
