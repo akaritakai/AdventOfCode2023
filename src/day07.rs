@@ -8,25 +8,11 @@ pub struct Day {
 
 impl Puzzle for Day {
     fn solve_part_1(&self) -> String {
-        let mut hands = self.parse_hands();
-        hands.sort_unstable_by(|a, b| compare_hands(&a.cards, &b.cards));
-        hands
-            .iter()
-            .enumerate()
-            .map(|(i, hand)| hand.bid * (i as i32 + 1))
-            .sum::<i32>()
-            .to_string()
+        self.solve_generic(compare_hands)
     }
 
     fn solve_part_2(&self) -> String {
-        let mut hands = self.parse_hands();
-        hands.sort_unstable_by(|a, b| compare_hands_with_wildcards(&a.cards, &b.cards));
-        hands
-            .iter()
-            .enumerate()
-            .map(|(i, hand)| hand.bid * (i as i32 + 1))
-            .sum::<i32>()
-            .to_string()
+        self.solve_generic(compare_hands_with_wildcards)
     }
 }
 
@@ -50,6 +36,20 @@ impl Day {
                 }
             })
             .collect()
+    }
+
+    fn solve_generic<F>(&self, compare: F) -> String
+    where
+        F: Fn(&str, &str) -> Ordering,
+    {
+        let mut hands = self.parse_hands();
+        hands.sort_unstable_by(|a, b| compare(&a.cards, &b.cards));
+        hands
+            .into_iter()
+            .enumerate()
+            .map(|(i, hand)| hand.bid * (i as i32 + 1))
+            .sum::<i32>()
+            .to_string()
     }
 }
 
