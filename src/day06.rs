@@ -5,10 +5,6 @@ pub struct Day {
 }
 
 impl Puzzle for Day {
-    fn day(&self) -> u8 {
-        6
-    }
-
     fn solve_part_1(&self) -> String {
         let mut lines = self.input.lines();
         let times = parse_line_to_numbers(lines.next().unwrap());

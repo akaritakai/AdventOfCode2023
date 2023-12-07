@@ -8,10 +8,6 @@ pub struct Day {
 }
 
 impl Puzzle for Day {
-    fn day(&self) -> u8 {
-        5
-    }
-
     fn solve_part_1(&self) -> String {
         let mut seeds = Vec::new();
         let seed_line = self.input.lines().next().unwrap();

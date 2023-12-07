@@ -6,10 +6,6 @@ pub struct Day {
 }
 
 impl Puzzle for Day {
-    fn day(&self) -> u8 {
-        1
-    }
-
     fn solve_part_1(&self) -> String {
         self.solve_internal(false).to_string()
     }

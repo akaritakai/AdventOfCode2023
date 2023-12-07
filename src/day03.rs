@@ -7,10 +7,6 @@ pub struct Day {
 }
 
 impl Puzzle for Day {
-    fn day(&self) -> u8 {
-        3
-    }
-
     fn solve_part_1(&self) -> String {
         let numbers: HashSet<PartNumber> = self.get_edges().values().flatten().cloned().collect();
         numbers
