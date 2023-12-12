@@ -55,23 +55,20 @@ impl Day {
 fn count_arrangements(line: &str, counts: &[usize]) -> usize {
     let mut memo = HashMap::new();
     let line = format!("{}.", line).to_string();
-    count_arrangements_impl(&mut memo, line.as_bytes(), counts, 0, 0, 0)
+    count_arrangements_impl(&mut memo, line.as_bytes(), counts, (0, 0, 0))
 }
 
 fn count_arrangements_impl(
     memo: &mut HashMap<(usize, usize, usize), usize>,
     line: &[u8],
     counts: &[usize],
-    pos: usize,
-    group: usize,
-    count: usize,
+    key: (usize, usize, usize),
 ) -> usize {
-    let key = (pos, group, count);
     if let Some(&result) = memo.get(&key) {
         return result;
     }
     let result;
-
+    let (pos, group, count) = key;
     // Base case: we've reached the end of the line
     if pos == line.len() {
         // If we've seen all the groups after reading the entire string, we've found a valid arrangement. Otherwise, we haven't.
@@ -90,17 +87,17 @@ fn count_arrangements_impl(
     }
     // Case 1: Current character is '#' -- add it to our current group's count
     else if line[pos] == b'#' {
-        result = count_arrangements_impl(memo, line, counts, pos + 1, group, count + 1);
+        result = count_arrangements_impl(memo, line, counts, (pos + 1, group, count + 1));
     }
     // Case 2: Current character is '.'
     else if line[pos] == b'.' {
         // Case 2a: Check if the group is valid
         if group < counts.len() && count == counts[group] {
-            result = count_arrangements_impl(memo, line, counts, pos + 1, group + 1, 0);
+            result = count_arrangements_impl(memo, line, counts, (pos + 1, group + 1, 0));
         }
         // Case 2b: We haven't seen any '#'s yet for the current group
         else if count == 0 {
-            result = count_arrangements_impl(memo, line, counts, pos + 1, group, 0);
+            result = count_arrangements_impl(memo, line, counts, (pos + 1, group, 0));
         }
         // Case 2c: We've seen some '#'s for the current group, but not enough
         else {
@@ -114,14 +111,14 @@ fn count_arrangements_impl(
 
         // Assume we have a '#' here and it can be added ot the current group
         if group < counts.len() && count < counts[group] {
-            hash_count = count_arrangements_impl(memo, line, counts, pos + 1, group, count + 1);
+            hash_count = count_arrangements_impl(memo, line, counts, (pos + 1, group, count + 1));
         }
         if group < counts.len() && count == counts[group] {
             // Assume we have a '.' here and we're ready to move into the next group
-            dot_count = count_arrangements_impl(memo, line, counts, pos + 1, group + 1, 0);
+            dot_count = count_arrangements_impl(memo, line, counts, (pos + 1, group + 1, 0));
         } else if count == 0 {
             // Assume we have a '.' here and we're staying in the current group
-            dot_count = count_arrangements_impl(memo, line, counts, pos + 1, group, 0);
+            dot_count = count_arrangements_impl(memo, line, counts, (pos + 1, group, 0));
         }
 
         result = hash_count + dot_count;
