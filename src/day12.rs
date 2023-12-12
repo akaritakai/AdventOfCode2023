@@ -72,7 +72,7 @@ fn count_arrangements_impl(
     // Base case: we've reached the end of the line
     if pos == line.len() {
         // If we've seen all the groups after reading the entire string, we've found a valid arrangement. Otherwise, we haven't.
-        if counts.len() == group {
+        if counts.len() == group && count == 0 {
             result = 1;
         } else {
             result = 0;
