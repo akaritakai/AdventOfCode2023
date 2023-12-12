@@ -1,5 +1,4 @@
 use crate::puzzle::Puzzle;
-use std::collections::HashMap;
 
 pub struct Day {
     input: String,
@@ -62,8 +61,7 @@ fn count_arrangements(line: &str, counts: &[usize]) -> usize {
     dp[n][m - 1][counts[m - 1]] = 1;
 
     for pos in (0..n).rev() {
-        for group in 0..=m {
-            let max_count = if group < m { counts[group] } else { 0 };
+        for (group, &max_count) in counts.iter().enumerate() {
             for count in 0..=max_count {
                 for &c in &[b'.', b'#'] {
                     if line[pos] == c || line[pos] == b'?' {
@@ -77,6 +75,9 @@ fn count_arrangements(line: &str, counts: &[usize]) -> usize {
                     }
                 }
             }
+        }
+        if matches!(line[pos], b'.' | b'?') {
+            dp[pos][m][0] += dp[pos + 1][m][0];
         }
     }
 
