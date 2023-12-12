@@ -1,4 +1,5 @@
 use crate::puzzle::Puzzle;
+use rayon::prelude::*;
 
 pub struct Day {
     input: String,
@@ -15,7 +16,7 @@ impl Puzzle for Day {
 
     fn solve_part_2(&self) -> String {
         self.parse_input()
-            .iter()
+            .par_iter()
             .map(|(pattern, counts)| {
                 let pattern = [*pattern; 5].join("?");
                 let counts = counts.repeat(5);
