@@ -55,33 +55,32 @@ fn count_arrangements(line: &str, counts: &[usize]) -> usize {
     let line = line.as_bytes();
     let n = line.len();
     let m = counts.len();
-    let mut dp = vec![vec![vec![0; n + 1]; m + 1]; n + 1];
+    let mut dp = &mut vec![vec![0; n + 1]; m + 1];
+    let mut next_dp = &mut vec![vec![0; n + 1]; m + 1];
 
-    dp[n][m][0] = 1;
-    dp[n][m - 1][counts[m - 1]] = 1;
+    dp[m][0] = 1;
+    dp[m - 1][counts[m - 1]] = 1;
 
     for pos in (0..n).rev() {
-        for (group, &max_count) in counts.iter().enumerate() {
+        for group in 0..=m {
+            let max_count = if group == m { 0 } else { counts[group] };
             for count in 0..=max_count {
-                for &c in &[b'.', b'#'] {
-                    if line[pos] == c || line[pos] == b'?' {
-                        if c == b'.' && count == 0 {
-                            dp[pos][group][count] += dp[pos + 1][group][0];
-                        } else if c == b'.' && group < m && counts[group] == count {
-                            dp[pos][group][count] += dp[pos + 1][group + 1][0];
-                        } else if c == b'#' {
-                            dp[pos][group][count] += dp[pos + 1][group][count + 1];
-                        }
-                    }
+                next_dp[group][count] = 0;
+                if matches!(line[pos], b'#' | b'?') {
+                    next_dp[group][count] += dp[group][count + 1];
+                }
+            }
+            if matches!(line[pos], b'.' | b'?') {
+                next_dp[group][0] += dp[group][0];
+                if group < m {
+                    next_dp[group][max_count] += dp[group + 1][0];
                 }
             }
         }
-        if matches!(line[pos], b'.' | b'?') {
-            dp[pos][m][0] += dp[pos + 1][m][0];
-        }
+        std::mem::swap(&mut dp, &mut next_dp);
     }
 
-    dp[0][0][0]
+    dp[0][0]
 }
 
 #[cfg(test)]
