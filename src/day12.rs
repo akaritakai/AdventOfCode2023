@@ -67,7 +67,7 @@ fn count_arrangements(line: &str, counts: &[usize]) -> usize {
                     if line[pos] == c || line[pos] == b'?' {
                         if c == b'.' && count == 0 {
                             dp[pos][group][count] += dp[pos + 1][group][0];
-                        } else if c == b'.' && count > 0 && group < m && counts[group] == count {
+                        } else if c == b'.' && group < m && counts[group] == count {
                             dp[pos][group][count] += dp[pos + 1][group + 1][0];
                         } else if c == b'#' {
                             dp[pos][group][count] += dp[pos + 1][group][count + 1];
