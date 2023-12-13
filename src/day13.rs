@@ -6,35 +6,11 @@ pub struct Day {
 
 impl Puzzle for Day {
     fn solve_part_1(&self) -> String {
-        self.parse_mirrors()
-            .iter()
-            .map(|(rows, cols)| {
-                if let Some(i) = find_pure_reflection(rows) {
-                    100 * (i + 1)
-                } else if let Some(i) = find_pure_reflection(cols) {
-                    i + 1
-                } else {
-                    unreachable!()
-                }
-            })
-            .sum::<usize>()
-            .to_string()
+        self.solve_generic(0).to_string()
     }
 
     fn solve_part_2(&self) -> String {
-        self.parse_mirrors()
-            .iter()
-            .map(|(rows, cols)| {
-                if let Some(i) = find_smudged_reflection(rows) {
-                    100 * (i + 1)
-                } else if let Some(i) = find_smudged_reflection(cols) {
-                    i + 1
-                } else {
-                    unreachable!()
-                }
-            })
-            .sum::<usize>()
-            .to_string()
+        self.solve_generic(1).to_string()
     }
 }
 
@@ -46,76 +22,44 @@ impl Day {
     }
 
     fn parse_mirrors(&self) -> Vec<(Vec<u64>, Vec<u64>)> {
-        self.input
-            .split("\n\n")
-            .map(|block| {
-                let lines: Vec<&str> = block.lines().collect();
-                let rows = lines
-                    .iter()
-                    .map(|line| {
-                        line.chars().fold(0u64, |mut row, c| {
-                            row <<= 1;
-                            if c == '#' {
-                                row |= 1;
-                            }
-                            row
-                        })
-                    })
-                    .collect::<Vec<u64>>();
-                let mut cols = vec![0u64; lines[0].len()];
-                for (_, &row) in rows.iter().enumerate() {
-                    for (j, col) in cols.iter_mut().enumerate() {
-                        *col <<= 1;
-                        *col |= (row >> (lines[0].len() - j - 1)) & 1;
-                    }
-                }
-                (rows, cols)
+        self.input.split("\n\n").map(parse_mirror).collect()
+    }
+
+    fn solve_generic(&self, expected_diffs: u32) -> usize {
+        self.parse_mirrors()
+            .iter()
+            .map(|(rows, cols)| {
+                reflection_score(rows, expected_diffs, 100)
+                    .or_else(|| reflection_score(cols, expected_diffs, 1))
+                    .unwrap()
             })
-            .collect()
+            .sum::<usize>()
     }
 }
 
-fn find_pure_reflection(values: &[u64]) -> Option<usize> {
-    'OUTER: for (i, pair) in values.iter().zip(values.iter().skip(1)).enumerate() {
-        if pair.0 != pair.1 {
-            continue;
-        }
-        let mut k = 1;
-        while i as i32 - k >= 0 && i as i32 + k + 1 < values.len() as i32 {
-            if values[i - k as usize] != values[i + k as usize + 1] {
-                continue 'OUTER;
-            }
-            k += 1;
-        }
-        return Some(i);
-    }
-    None
+fn parse_mirror(block: &str) -> (Vec<u64>, Vec<u64>) {
+    let grid: Vec<Vec<u64>> = block
+        .lines()
+        .map(|line| line.chars().map(|c| if c == '#' { 1 } else { 0 }).collect())
+        .collect();
+    let rows = grid
+        .iter()
+        .map(|row| row.iter().fold(0, |acc, &bit| (acc << 1) | bit))
+        .collect::<Vec<u64>>();
+    let cols = (0..grid[0].len())
+        .map(|i| grid.iter().fold(0, |acc, row| (acc << 1) | row[i]))
+        .collect::<Vec<u64>>();
+    (rows, cols)
 }
 
-fn find_smudged_reflection(values: &[u64]) -> Option<usize> {
-    'OUTER: for (i, pair) in values.iter().zip(values.iter().skip(1)).enumerate() {
-        let mut used_smudge = false;
-        if pair.0 != pair.1 && (pair.0 ^ pair.1).count_ones() != 1 {
-            continue;
-        } else if pair.0 != pair.1 {
-            used_smudge = true;
+fn reflection_score(values: &[u64], expected_diffs: u32, factor: usize) -> Option<usize> {
+    for i in 0..values.len() - 1 {
+        let mut diffs = 0;
+        for (j, k) in (0..=i).rev().zip((i + 1)..values.len()) {
+            diffs += (values[j] ^ values[k]).count_ones();
         }
-        let mut k = 1;
-        while i as i32 - k >= 0 && i as i32 + k + 1 < values.len() as i32 {
-            let left = values[i - k as usize];
-            let right = values[i + k as usize + 1];
-            if left != right && (left ^ right).count_ones() != 1 {
-                continue 'OUTER;
-            } else if left != right {
-                if used_smudge {
-                    continue 'OUTER;
-                }
-                used_smudge = true;
-            }
-            k += 1;
-        }
-        if used_smudge {
-            return Some(i);
+        if diffs == expected_diffs {
+            return Some((i + 1) * factor);
         }
     }
     None
