@@ -7,9 +7,9 @@ pub struct Day {
 impl Puzzle for Day {
     fn solve_part_1(&self) -> String {
         let pipes = Pipes::parse(&self.input);
-        let boundary_point = pipes.find_starting_point();
-        let mut direction = pipes.find_initial_direction(boundary_point);
-        let mut position = boundary_point + direction;
+        let boundary = pipes.find_starting_point();
+        let mut direction = pipes.find_initial_direction(boundary);
+        let mut position = boundary + direction;
         let mut steps = 1;
         while pipes[position] != 'S' {
             direction = next_direction(pipes[position], direction);
@@ -21,21 +21,21 @@ impl Puzzle for Day {
 
     fn solve_part_2(&self) -> String {
         let pipes = Pipes::parse(&self.input);
-        let mut boundary_point = pipes.find_starting_point();
-        let mut direction = pipes.find_initial_direction(boundary_point);
-        let mut position = boundary_point + direction;
+        let mut boundary = pipes.find_starting_point();
+        let mut direction = pipes.find_initial_direction(boundary);
+        let mut position = boundary + direction;
         let mut steps = 1;
         let mut area = 0;
         while pipes[position] != 'S' {
             if matches!(pipes[position], 'L' | 'J' | '7' | 'F') {
-                area += boundary_point.row * position.col - boundary_point.col * position.row;
-                boundary_point = position;
+                area += boundary.row * position.col - boundary.col * position.row;
+                boundary = position;
             }
             direction = next_direction(pipes[position], direction);
             position += direction;
             steps += 1;
         }
-        area += boundary_point.row * position.col - boundary_point.col * position.row;
+        area += boundary.row * position.col - boundary.col * position.row;
         (area.abs() / 2 - steps / 2 + 1).to_string()
     }
 }

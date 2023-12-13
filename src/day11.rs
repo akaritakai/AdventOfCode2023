@@ -45,13 +45,12 @@ fn dist(galaxy_counts: Vec<usize>, gap_factor: usize) -> usize {
     for (i, &galaxies) in galaxy_counts.iter().enumerate() {
         if galaxies == 0 {
             gap_count += 1;
-            continue;
+        } else {
+            let position = i + gap_count * (gap_factor - 1);
+            total_distance += galaxies * (galaxies_seen * position - weighted_position_sum);
+            galaxies_seen += galaxies;
+            weighted_position_sum += galaxies * position;
         }
-        let position = i + gap_count * (gap_factor - 1);
-        total_distance += galaxies * galaxies_seen * position;
-        total_distance -= galaxies * weighted_position_sum;
-        galaxies_seen += galaxies;
-        weighted_position_sum += galaxies * position;
     }
     total_distance
 }
