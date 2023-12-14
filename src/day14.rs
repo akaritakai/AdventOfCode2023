@@ -52,12 +52,14 @@ fn tilt_grid(grid: &Vec<Vec<char>>) -> Vec<Vec<char>> {
     let mut new_grid = grid.clone();
     for row in 0..grid.len() {
         for col in 0..grid[0].len() {
-            if new_grid[row][col] == 'O' {
-                highest_occupied[col] += 1;
-                new_grid[row][col] = '.';
-                new_grid[highest_occupied[col] as usize][col] = 'O';
-            } else if new_grid[row][col] == '#' {
-                highest_occupied[col] = row as i32;
+            match new_grid[row][col] {
+                'O' => {
+                    highest_occupied[col] += 1;
+                    new_grid[row][col] = '.';
+                    new_grid[highest_occupied[col] as usize][col] = 'O';
+                }
+                '#' => highest_occupied[col] = row as i32,
+                _ => {}
             }
         }
     }
