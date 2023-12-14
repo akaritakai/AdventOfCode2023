@@ -36,12 +36,10 @@ impl Puzzle for Day {
 }
 
 fn rotate_grid(grid: &Vec<Vec<char>>) -> Vec<Vec<char>> {
-    let num_rows = grid.len();
-    let num_cols = grid[0].len();
-    let mut new_grid = vec![vec!['.'; num_rows]; num_cols];
+    let mut new_grid = vec![vec!['.'; grid.len()]; grid[0].len()];
     for (row, line) in grid.iter().enumerate() {
         for (col, &c) in line.iter().enumerate() {
-            new_grid[col][num_rows - row - 1] = c;
+            new_grid[col][grid.len() - row - 1] = c;
         }
     }
     new_grid
