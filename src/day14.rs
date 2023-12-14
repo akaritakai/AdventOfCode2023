@@ -18,18 +18,21 @@ impl Puzzle for Day {
         let mut grid = self.parse_grid();
         let mut seen = HashMap::new();
         while steps < target {
-            steps += 1;
             for _ in 0..4 {
                 grid = tilt_grid(&grid);
                 grid = rotate_grid(&grid);
             }
-
-            if let Some(&prev_steps) = seen.get(&grid) {
-                let cycle_length = steps - prev_steps;
-                let amount = (target - steps) / cycle_length;
-                steps += amount * cycle_length;
+            steps += 1;
+            match seen.get(&grid) {
+                Some(&prev_steps) => {
+                    let cycle_length = steps - prev_steps;
+                    let cycles_to_skip = (target - steps) / cycle_length;
+                    steps += cycles_to_skip * cycle_length;
+                }
+                None => {
+                    seen.insert(grid.clone(), steps);
+                }
             }
-            seen.insert(grid.clone(), steps);
         }
         total_load(&grid).to_string()
     }
