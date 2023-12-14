@@ -57,6 +57,9 @@ fn reflection_score(values: &[u64], expected_diffs: u32, factor: usize) -> Optio
         let mut diffs = 0;
         for (j, k) in (0..=i).rev().zip((i + 1)..values.len()) {
             diffs += (values[j] ^ values[k]).count_ones();
+            if diffs > expected_diffs {
+                break;
+            }
         }
         if diffs == expected_diffs {
             return Some((i + 1) * factor);

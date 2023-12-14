@@ -42,6 +42,8 @@ Day 12 Part 1: 7541
 Day 12 Part 2: 17485169859432
 Day 13 Part 1: 27202
 Day 13 Part 2: 41566
+Day 14 Part 1: 113486
+Day 14 Part 2: 104409
 ```
 
 ## Docker Instructions
