@@ -65,16 +65,10 @@ fn tilt_grid(grid: &Vec<Vec<char>>) -> Vec<Vec<char>> {
 }
 
 fn total_load(grid: &Vec<Vec<char>>) -> usize {
-    let mut load = 0;
-    for (i, row) in grid.iter().enumerate() {
-        let factor = grid.len() - i;
-        for &c in row {
-            if c == 'O' {
-                load += factor;
-            }
-        }
-    }
-    load
+    grid.iter()
+        .enumerate()
+        .map(|(i, row)| row.iter().filter(|&&c| c == 'O').count() * (grid.len() - i))
+        .sum()
 }
 
 impl Day {
