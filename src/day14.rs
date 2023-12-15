@@ -1,3 +1,4 @@
+use crate::day14::Direction::{East, North, South, West};
 use crate::puzzle::Puzzle;
 use std::collections::HashMap;
 
@@ -7,8 +8,8 @@ pub struct Day {
 
 impl Puzzle for Day {
     fn solve_part_1(&self) -> String {
-        let grid = self.parse_grid();
-        let grid = tilt_grid(&grid);
+        let mut grid = self.parse_grid();
+        tilt_grid(&mut grid, North);
         total_load(&grid).to_string()
     }
 
@@ -18,10 +19,10 @@ impl Puzzle for Day {
         let mut grid = self.parse_grid();
         let mut seen = HashMap::new();
         while steps < target {
-            for _ in 0..4 {
-                grid = tilt_grid(&grid);
-                grid = rotate_grid(&grid);
-            }
+            tilt_grid(&mut grid, North);
+            tilt_grid(&mut grid, West);
+            tilt_grid(&mut grid, South);
+            tilt_grid(&mut grid, East);
             steps += 1;
             match seen.get(&grid) {
                 Some(&prev_steps) => {
@@ -38,33 +39,110 @@ impl Puzzle for Day {
     }
 }
 
-fn rotate_grid(grid: &Vec<Vec<char>>) -> Vec<Vec<char>> {
-    let mut new_grid = vec![vec!['.'; grid.len()]; grid[0].len()];
-    for (row, line) in grid.iter().enumerate() {
-        for (col, &c) in line.iter().enumerate() {
-            new_grid[col][grid.len() - row - 1] = c;
-        }
-    }
-    new_grid
+#[derive(Eq, PartialEq, Copy, Clone)]
+enum Direction {
+    North,
+    South,
+    West,
+    East,
 }
 
-fn tilt_grid(grid: &Vec<Vec<char>>) -> Vec<Vec<char>> {
-    let mut highest_occupied = vec![-1; grid[0].len()];
-    let mut new_grid = grid.clone();
-    for row in 0..grid.len() {
-        for col in 0..grid[0].len() {
-            match new_grid[row][col] {
-                'O' => {
-                    highest_occupied[col] += 1;
-                    new_grid[row][col] = '.';
-                    new_grid[highest_occupied[col] as usize][col] = 'O';
-                }
-                '#' => highest_occupied[col] = row as i32,
-                _ => {}
+struct TiltConfig {
+    occupied_init: i32,
+    occupied_step: i32,
+    major_start: i32,
+    major_end: i32,
+    major_step: i32,
+    minor: usize,
+    row_major: bool,
+}
+
+fn tilt_grid(grid: &mut [Vec<char>], dir: Direction) {
+    let (rows, cols) = (grid.len(), grid[0].len());
+    match dir {
+        North => (0..cols).for_each(|col| {
+            tilt_grid_impl(
+                grid,
+                TiltConfig {
+                    occupied_init: -1,
+                    occupied_step: 1,
+                    major_start: 0,
+                    major_end: rows as i32,
+                    major_step: 1,
+                    minor: col,
+                    row_major: true,
+                },
+            )
+        }),
+        South => (0..cols).for_each(|col| {
+            tilt_grid_impl(
+                grid,
+                TiltConfig {
+                    occupied_init: cols as i32,
+                    occupied_step: -1,
+                    major_start: (rows - 1) as i32,
+                    major_end: -1,
+                    major_step: -1,
+                    minor: col,
+                    row_major: true,
+                },
+            )
+        }),
+        West => (0..rows).for_each(|row| {
+            tilt_grid_impl(
+                grid,
+                TiltConfig {
+                    occupied_init: -1,
+                    occupied_step: 1,
+                    major_start: 0,
+                    major_end: cols as i32,
+                    major_step: 1,
+                    minor: row,
+                    row_major: false,
+                },
+            )
+        }),
+        East => (0..rows).for_each(|row| {
+            tilt_grid_impl(
+                grid,
+                TiltConfig {
+                    occupied_init: rows as i32,
+                    occupied_step: -1,
+                    major_start: (cols - 1) as i32,
+                    major_end: -1,
+                    major_step: -1,
+                    minor: row,
+                    row_major: false,
+                },
+            )
+        }),
+    };
+}
+
+fn tilt_grid_impl(grid: &mut [Vec<char>], config: TiltConfig) {
+    let mut occupied = config.occupied_init;
+    let mut major = config.major_start;
+    while major != config.major_end {
+        let (row, col) = if config.row_major {
+            (major as usize, config.minor)
+        } else {
+            (config.minor, major as usize)
+        };
+        match grid[row][col] {
+            'O' => {
+                occupied += config.occupied_step;
+                grid[row][col] = '.';
+                if config.row_major {
+                    grid[occupied as usize][config.minor] = 'O';
+                } else {
+                    grid[config.minor][occupied as usize] = 'O';
+                };
             }
+            '#' => occupied = major,
+            _ => {}
         }
+        major += config.major_step;
     }
-    new_grid.clone()
 }
 
 fn total_load(grid: &Vec<Vec<char>>) -> usize {
