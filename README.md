@@ -2,8 +2,8 @@
 
 [![Build Status](https://github.com/akaritakai/AdventOfCode2023/actions/workflows/main.yml/badge.svg)](https://github.com/akaritakai/AdventOfCode2023/actions)
 [![Code Coverage](https://img.shields.io/codecov/c/github/akaritakai/AdventOfCode2023.svg)](https://codecov.io/gh/akaritakai/AdventOfCode2023)
-![Stars](https://img.shields.io/badge/stars%20⭐-26-yellow)
-![Days Completed](https://img.shields.io/badge/days%20completed-13-green)
+![Stars](https://img.shields.io/badge/stars%20⭐-30-yellow)
+![Days Completed](https://img.shields.io/badge/days%20completed-15-green)
 
 This repo contains my Advent of Code 2023 solutions in Rust. After providing it with your puzzle inputs (or your
 session token), running the program will print out the answers to all days of the puzzle. A Docker image is provided to
@@ -44,6 +44,8 @@ Day 13 Part 1: 27202
 Day 13 Part 2: 41566
 Day 14 Part 1: 113486
 Day 14 Part 2: 104409
+Day 15 Part 1: 511215
+Day 15 Part 2: 236057
 ```
 
 ## Docker Instructions
