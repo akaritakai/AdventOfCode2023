@@ -74,11 +74,11 @@ fn least_heat_loss<const MIN_STEPS: usize, const MAX_STEPS: usize>(grid: &[Vec<u
         for new_flow in neighbors::<MIN_STEPS, MAX_STEPS>(rows, cols, flow) {
             let new_cost = cost + grid[new_flow.loc.0 as usize][new_flow.loc.1 as usize];
             if new_cost < score.get(&new_flow).copied().unwrap_or(usize::MAX) {
-                let new_heuristic_cost = new_cost
+                let heuristic = new_cost
                     + (end.0 - new_flow.loc.0).unsigned_abs()
                     + (end.1 - new_flow.loc.1).unsigned_abs();
                 score.insert(new_flow, new_cost);
-                queue.push((Reverse((new_heuristic_cost, new_cost)), new_flow));
+                queue.push((Reverse((heuristic, new_cost)), new_flow));
             }
         }
     }
