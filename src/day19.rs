@@ -114,65 +114,67 @@ fn find_accepted_intervals_impl(
         return;
     }
     seen_states.insert(node.clone());
-    let mut current_interval = interval.clone();
+    let mut interval = interval.clone();
     for rule in workflows.get(&node).unwrap() {
         match rule {
             Rule::If(var, op, value, dst) => {
-                let mut next_interval = current_interval.clone();
-                match (var, op) {
-                    ('x', '<') => {
-                        next_interval.0 = *value..current_interval.0.end;
-                        current_interval.0 = current_interval.0.start..*value;
-                    }
-                    ('x', '>') => {
-                        next_interval.0 = current_interval.0.start..*value + 1;
-                        current_interval.0 = *value + 1..current_interval.0.end;
-                    }
-                    ('m', '<') => {
-                        next_interval.1 = *value..current_interval.1.end;
-                        current_interval.1 = current_interval.1.start..*value;
-                    }
-                    ('m', '>') => {
-                        next_interval.1 = current_interval.1.start..*value + 1;
-                        current_interval.1 = *value + 1..current_interval.1.end;
-                    }
-                    ('a', '<') => {
-                        next_interval.2 = *value..current_interval.2.end;
-                        current_interval.2 = current_interval.2.start..*value;
-                    }
-                    ('a', '>') => {
-                        next_interval.2 = current_interval.2.start..*value + 1;
-                        current_interval.2 = *value + 1..current_interval.2.end;
-                    }
-                    ('s', '<') => {
-                        next_interval.3 = *value..current_interval.3.end;
-                        current_interval.3 = current_interval.3.start..*value;
-                    }
-                    ('s', '>') => {
-                        next_interval.3 = current_interval.3.start..*value + 1;
-                        current_interval.3 = *value + 1..current_interval.3.end;
-                    }
-                    _ => unreachable!(),
-                }
+                let (then_interval, else_interval) = update_interval(*var, *op, *value, interval);
                 find_accepted_intervals_impl(
                     dst.clone(),
-                    &current_interval,
+                    &then_interval,
                     workflows,
                     seen_states,
                     accepted_intervals,
                 );
-                current_interval = next_interval;
+                interval = else_interval
             }
             Rule::Goto(dst) => {
                 find_accepted_intervals_impl(
                     dst.clone(),
-                    &current_interval,
+                    &interval,
                     workflows,
                     seen_states,
                     accepted_intervals,
                 );
             }
         }
+    }
+}
+
+fn update_interval(var: char, op: char, value: usize, interval: Interval) -> (Interval, Interval) {
+    let mut interval1 = interval.clone();
+    let mut interval2 = interval.clone();
+    match var {
+        'x' => {
+            let (range1, range2) = update_range(op, value, interval.0);
+            interval1.0 = range1;
+            interval2.0 = range2;
+        }
+        'm' => {
+            let (range1, range2) = update_range(op, value, interval.1);
+            interval1.1 = range1;
+            interval2.1 = range2;
+        }
+        'a' => {
+            let (range1, range2) = update_range(op, value, interval.2);
+            interval1.2 = range1;
+            interval2.2 = range2;
+        }
+        's' => {
+            let (range1, range2) = update_range(op, value, interval.3);
+            interval1.3 = range1;
+            interval2.3 = range2;
+        }
+        _ => unreachable!(),
+    }
+    (interval1, interval2)
+}
+
+fn update_range(op: char, value: usize, range: Range<usize>) -> (Range<usize>, Range<usize>) {
+    match op {
+        '<' => (range.start..value, value..range.end),
+        '>' => (value + 1..range.end, range.start..value + 1),
+        _ => unreachable!(),
     }
 }
 
