@@ -47,11 +47,11 @@ fn least_heat_loss<const MIN_STEPS: usize, const MAX_STEPS: usize>(grid: &[Vec<u
     let start = (0, 0);
     let end = (rows as isize - 1, cols as isize - 1);
 
-    let mut distance = HashMap::new();
+    let mut score = HashMap::new();
 
     let mut queue = BinaryHeap::new();
     queue.push((
-        Reverse(0),
+        Reverse((0, 0)),
         LavaFlow {
             loc: start,
             dir: (0, 1),
@@ -59,7 +59,7 @@ fn least_heat_loss<const MIN_STEPS: usize, const MAX_STEPS: usize>(grid: &[Vec<u
         },
     ));
     queue.push((
-        Reverse(0),
+        Reverse((0, 0)),
         LavaFlow {
             loc: start,
             dir: (1, 0),
@@ -67,15 +67,18 @@ fn least_heat_loss<const MIN_STEPS: usize, const MAX_STEPS: usize>(grid: &[Vec<u
         },
     ));
 
-    while let Some((Reverse(cost), flow)) = queue.pop() {
+    while let Some((Reverse((_, cost)), flow)) = queue.pop() {
         if flow.loc == end && flow.count >= MIN_STEPS {
             return cost;
         }
         for new_flow in neighbors::<MIN_STEPS, MAX_STEPS>(rows, cols, flow) {
             let new_cost = cost + grid[new_flow.loc.0 as usize][new_flow.loc.1 as usize];
-            if new_cost < distance.get(&new_flow).copied().unwrap_or(usize::MAX) {
-                distance.insert(new_flow, new_cost);
-                queue.push((Reverse(new_cost), new_flow));
+            if new_cost < score.get(&new_flow).copied().unwrap_or(usize::MAX) {
+                let new_heuristic_cost = new_cost
+                    + (end.0 - new_flow.loc.0).unsigned_abs()
+                    + (end.1 - new_flow.loc.1).unsigned_abs();
+                score.insert(new_flow, new_cost);
+                queue.push((Reverse((new_heuristic_cost, new_cost)), new_flow));
             }
         }
     }
