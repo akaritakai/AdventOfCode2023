@@ -123,7 +123,7 @@ impl Grid {
         let n = self.grid.len() as isize;
         let (a_row, a_col) = (a.2 as isize + a.0 * n, a.3 as isize + a.1 * n);
         let (b_row, b_col) = (b.2 as isize + b.0 * n, b.3 as isize + b.1 * n);
-        ((a_row - b_row), (a_col - b_col))
+        (a_row - b_row, a_col - b_col)
     }
 }
 
