@@ -146,9 +146,7 @@ mod tests {
             .##..##.##.\n\
             ...........";
         let grid = Grid::parse(&input);
-        println!("calc for 0");
         assert_eq!(grid.calculate_reachable_plots(0), 1);
-        println!("calc for 1");
         assert_eq!(grid.calculate_reachable_plots(1), 2);
         assert_eq!(grid.calculate_reachable_plots(2), 4);
         assert_eq!(grid.calculate_reachable_plots(3), 6);
