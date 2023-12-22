@@ -63,7 +63,7 @@ impl Grid {
         }
 
         let n = self.grid.len();
-        let mut dp = vec![0; steps + 1000];
+        let mut dp = vec![0; steps + 2 * n + 1];
         for i in (0..=steps).rev() {
             dp[i] = ((i % 2 == steps % 2) as usize) + 2 * dp[i + n] - dp[i + 2 * n];
         }
