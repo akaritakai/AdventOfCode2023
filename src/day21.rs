@@ -71,9 +71,9 @@ impl Grid {
         for (coordinates, distance) in distances.iter() {
             if *distance <= steps as u64 {
                 let n = self.grid.len() as isize;
-                let (drow, dcol) =
+                let (row_dist, col_dist) =
                     self.manhattan_distance(*coordinates, (0, 0, self.start.0, self.start.1));
-                if (-n..n).contains(&drow) && (-n..n).contains(&dcol) {
+                if (-n..n).contains(&row_dist) && (-n..n).contains(&col_dist) {
                     reachable += dp[*distance as usize];
                 }
             }
