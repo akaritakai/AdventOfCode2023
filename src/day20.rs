@@ -32,7 +32,6 @@ impl Puzzle for Day {
 
     fn solve_part_2(&self) -> String {
         let mut modules = self.parse_modules();
-
         let mut inputs: HashMap<String, Vec<String>> = HashMap::new();
         for (src, module) in &modules {
             let dsts = match module {
@@ -44,9 +43,8 @@ impl Puzzle for Day {
                 inputs.entry(dst.clone()).or_default().push(src.clone());
             }
         }
-
-        let rx_input = inputs.get("rx").unwrap().first().unwrap(); // This is the conjunction that feeds rx.
-        let num_cycles = inputs.get(rx_input).unwrap().len(); // This is the number of cycles that feed the conjunction that feeds rx.
+        let rx_input = inputs.get("rx").unwrap().first().unwrap();
+        let num_cycles = inputs.get(rx_input).unwrap().len();
         let mut cycles = HashMap::new();
         let mut total_presses = 0u64;
         let mut queue = VecDeque::new();
