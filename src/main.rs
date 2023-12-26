@@ -22,6 +22,10 @@ mod day18;
 mod day19;
 mod day20;
 mod day21;
+mod day22;
+mod day23;
+mod day24;
+mod day25;
 mod input_fetcher;
 mod puzzle;
 
@@ -49,6 +53,10 @@ fn main() {
         day19::Day::create(fetcher.get_input(19).unwrap().as_str()),
         day20::Day::create(fetcher.get_input(20).unwrap().as_str()),
         day21::Day::create(fetcher.get_input(21).unwrap().as_str()),
+        day22::Day::create(fetcher.get_input(22).unwrap().as_str()),
+        day23::Day::create(fetcher.get_input(23).unwrap().as_str()),
+        day24::Day::create(fetcher.get_input(24).unwrap().as_str()),
+        day25::Day::create(fetcher.get_input(25).unwrap().as_str()),
     ];
     for (i, puzzle) in puzzles.iter().enumerate() {
         println!("Day {:02} Part 1: {}", i + 1, puzzle.solve_part_1());
