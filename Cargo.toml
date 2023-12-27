@@ -10,6 +10,8 @@ reqwest = {version = "0.11.22", features = ["blocking"]}
 rangemap = "1.4.0"
 num = "0.4.1"
 rayon = "1.8.0"
+z3 = "0.12.1"
+itertools = "0.12.0"
 
 [dev-dependencies]
 httpmock = "0.6.8"
