@@ -10,7 +10,7 @@ session token), running the program will print out the answers to all days of th
 ensure compatibility with machines that do not want to install dependencies.
 
 The goal of this repo is to provide fast, highly tested, and easy-to-use solutions. When run on my PC (an AMD Ryzen 9
-7950X), all answers are output in ~1.5 seconds.
+7950X), all answers are output in ~1.1 seconds.
 
 This repo may see changes in the future to improve runtime. If you have any suggestions, issues running the code, or
 find a correctness error: please open an issue or pull request.
