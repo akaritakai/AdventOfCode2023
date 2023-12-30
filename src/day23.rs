@@ -61,6 +61,7 @@ impl Island {
                 modified |= self.reduce_vertex(vertex);
             }
         }
+        self.simplify_start_and_end();
     }
 
     fn reduce_vertex(&mut self, vertex: Vertex) -> bool {
@@ -95,6 +96,41 @@ impl Island {
             self.outgoing_edges.remove(&vertex);
         }
         true
+    }
+
+    fn simplify_start_and_end(&mut self) {
+        // Remove all incoming edges to the start vertex
+        let start_incoming = self.incoming_edges.get(&self.start).unwrap().clone();
+        for edge in start_incoming {
+            self.remove_edge(edge.src, edge.dst);
+        }
+        let start_outgoing = self.outgoing_edges.get(&self.start).unwrap().clone();
+        if start_outgoing.len() == 1 {
+            let node = start_outgoing.iter().next().unwrap().dst;
+            // Remove all incoming edges to the node except the one from the start vertex
+            let node_incoming = self.incoming_edges.get(&node).unwrap().clone();
+            for edge in node_incoming {
+                if edge.src != self.start {
+                    self.remove_edge(edge.src, edge.dst);
+                }
+            }
+        }
+        // Remove all outgoing edges from the end vertex
+        let outgoing = self.outgoing_edges.get(&self.end).unwrap().clone();
+        for edge in outgoing {
+            self.remove_edge(edge.src, edge.dst);
+        }
+        let end_incoming = self.incoming_edges.get(&self.end).unwrap().clone();
+        if end_incoming.len() == 1 {
+            let node = end_incoming.iter().next().unwrap().src;
+            // Remove all outgoing edges from the node except the one to the end vertex
+            let node_outgoing = self.outgoing_edges.get(&node).unwrap().clone();
+            for edge in node_outgoing {
+                if edge.dst != self.end {
+                    self.remove_edge(edge.src, edge.dst);
+                }
+            }
+        }
     }
 
     fn get_edge(&self, src: Vertex, dst: Vertex) -> Option<Edge> {
